@@ -50,9 +50,10 @@ class StudentDatabase:
             
         return None
     
+    
     def view_all_students(self):
         if not self.student_list:
-            print("No students in the database.")
+            print("No students found")
         else:
             for student in self.student_list:
                 print(student)
@@ -64,5 +65,24 @@ class StudentDatabase:
 
 
 famousSchool = StudentDatabase()
-student = famousSchool.get_student_by_ID(101)
-student.view_student_info()
+while True:
+    print('\n1. View All Students')
+    print('2. Enroll Student')
+    print('3. Drop Student')
+    print('4. Exit')
+
+    opt = input("Enter your option (1-4): ")
+    if opt == '1':
+        famousSchool.view_all_students()
+    elif opt == '2':
+        newStudent = Student(104, 'Alan', 'EEE', False)
+        newStudent.enroll_student(newStudent)
+    elif opt == '3':
+        student = famousSchool.get_student_by_ID(104)
+        if student:
+            student.drop_student()
+    elif opt == '4':
+        print('Exit Done...')
+        break
+    else:
+        print('Invalid option. Try again!')
