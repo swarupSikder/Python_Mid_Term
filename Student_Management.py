@@ -27,6 +27,10 @@ class Student:
             print(f"{self.name} is already dropped out.")
 
 
+    def view_student_info(self):
+        print(f'ID: {self.__student_id}, Name: {self.name}, Dept: {self.__department}, Enrolled: {self.__is_enrolled}')
+
+
     def __repr__(self):
         return f'ID: {self.__student_id}, Name: {self.name}, Dept: {self.__department}, Enrolled: {self.__is_enrolled}'
     
@@ -45,6 +49,13 @@ class StudentDatabase:
                 return student
             
         return None
+    
+    def view_all_students(self):
+        if not self.student_list:
+            print("No students in the database.")
+        else:
+            for student in self.student_list:
+                print(student)
 
 
     
@@ -53,13 +64,5 @@ class StudentDatabase:
 
 
 famousSchool = StudentDatabase()
-student = famousSchool.get_student_by_ID(103)
-if student:
-    student.drop_student()
-
-
-
-
-# output
-for student in famousSchool.student_list:
-    print(student)
+student = famousSchool.get_student_by_ID(101)
+student.view_student_info()
