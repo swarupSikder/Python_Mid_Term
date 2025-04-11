@@ -5,14 +5,11 @@ class Student:
         self.__department = department
         self.__is_enrolled = is_enrolled
 
-    def enroll_student(self, student):
-        if self.__is_enrolled == False:
-            self.__is_enrolled = True           # it will change id:104 (False -> True)
-            
-            database = StudentDatabase()
-            database.student_list.append(student)
-        else:
-            print(f'Trying to enroll {self.get_name()} who is already enrolled')
+    @classmethod
+    def add_student(cls, name, roll, result):
+        student = Student(name, roll, result)
+        cls.student_list.append(student)
+
 
     # To Access the private id
     def get_id(self):
@@ -28,32 +25,35 @@ class Student:
     
     # To Access the private enrolled
     def get_enrolled(self):
-        return self.__is_enrolled
+        status = "Enrolled" if self.__is_enrolled else "Not Enrolled"
+        return status
+
+    def enroll_student(self):
+        if not self.__is_enrolled:
+            self.__is_enrolled = True
+            print(f"{self.get_name()} has been successfully enrolled.")
+        else:
+            print(f"{self.get_name()} is already enrolled.")
 
     def drop_student(self):
-        if self.__is_enrolled == True:
+        if self.__is_enrolled:
             self.__is_enrolled = False
-            
-            # modify the is_enrolled to false for student
+            print(f"{self.get_name()} has been dropped.")
         else:
-            print(f'Trying to drop {self.get_name()} who is not enrolled')
-
+            print(f"{self.get_name()} is not currently enrolled.")
 
     def view_student_info(self):
         print(f'ID: {self.get_id()}, Name: {self.get_name()}, Dept: {self.get_dept()}, Enrolled: {self.get_enrolled()}')
 
-
     def __repr__(self):
         return f'ID: {self.get_id()}, Name: {self.get_name()}, Dept: {self.get_dept()}, Enrolled: {self.get_enrolled()}'
-    
 
 class StudentDatabase:
-    student_list = [
-        Student(100, 'Alif', 'IPE', True),
-        Student(101, 'Kopa', 'CSE', True),
-        Student(102, 'Samsu', 'EEE', False),
-        Student(103, 'Sikder', 'CSE', True)
-    ]
+    student_list = []
+
+    @classmethod
+    def add_student(cls, student):
+        cls.student_list.append(student)
 
     def get_student_by_ID(self, id):
         for student in self.student_list:
@@ -73,7 +73,11 @@ class StudentDatabase:
 
     
 
-    
+#---Manually added students---
+StudentDatabase.add_student(Student(100, "Alif", "IPE", True))
+StudentDatabase.add_student(Student(101, "kopa", "CSE", False))
+StudentDatabase.add_student(Student(102, "samsu", "IPE", True))
+StudentDatabase.add_student(Student(103, "sikder", "IPE", True))
 
 
 famousSchool = StudentDatabase()
@@ -89,23 +93,31 @@ while True:
         famousSchool.view_all_students()
     elif opt == '2':
         st_id = int(input('Enter a valid Student ID: '))
+        if not (100 <= st_id < 201):
+            print('Invalid student ID')
+            continue
+
+        if famousSchool.get_student_by_ID(st_id):
+            print("A student with this ID already exists.")
+            continue
+
+
         st_name = input('Enter Student Name: ')
         st_dept = input('Enter department: ')
-        st_enrolled = input('Enter enrollment status: ')
-        newStudent = Student(st_id, st_name, st_dept, st_enrolled)
+        newStudent = Student(st_id, st_name, st_dept, True)
 
         if newStudent.get_id() > 99 and newStudent.get_id() < 201:
-            newStudent.enroll_student(newStudent)
-            famousSchool.view_all_students()
+            newStudent.enroll_student()
+            # famousSchool.view_all_students()
         else:
             print('Invalid student ID')
     elif opt == '3':
         st_id = int(input('Enter a valid Student ID: '))
 
         student = famousSchool.get_student_by_ID(st_id)
-        if student and newStudent.get_id() > 99 and newStudent.get_id() < 201:
+        if student and 99 < student.get_id() < 201:
             student.drop_student()
-            famousSchool.view_all_students()
+            # famousSchool.view_all_students()
         else:
             print('Invalid student ID')
     elif opt == '4':
