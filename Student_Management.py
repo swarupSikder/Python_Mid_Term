@@ -12,7 +12,7 @@ class Student:
             database = StudentDatabase()
             database.student_list.append(student)
         else:
-            print(f"{self.name} is already enrolled.")
+            print(f'Trying to enroll {self.name} who is already enrolled')
 
     # To Access the private id
     def get_id(self):
@@ -24,7 +24,7 @@ class Student:
             
             # modify the is_enrolled to false for student
         else:
-            print(f"{self.name} is already dropped out.")
+            print(f'Trying to drop {self.name} who is not enrolled')
 
 
     def view_student_info(self):
@@ -75,12 +75,19 @@ while True:
     if opt == '1':
         famousSchool.view_all_students()
     elif opt == '2':
-        newStudent = Student(104, 'Alan', 'EEE', False)
-        newStudent.enroll_student(newStudent)
+        newStudent = Student(103, 'Alan', 'EEE', True)
+        if newStudent.get_id() > 99 and newStudent.get_id() < 201:
+            newStudent.enroll_student(newStudent)
+            famousSchool.view_all_students()
+        else:
+            print('Invalid student ID')
     elif opt == '3':
-        student = famousSchool.get_student_by_ID(104)
-        if student:
+        student = famousSchool.get_student_by_ID(103)
+        if student and newStudent.get_id() > 99 and newStudent.get_id() < 201:
             student.drop_student()
+            famousSchool.view_all_students()
+        else:
+            print('Invalid student ID')
     elif opt == '4':
         print('Exit Done...')
         break
