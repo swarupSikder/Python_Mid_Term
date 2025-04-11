@@ -14,6 +14,19 @@ class Student:
         else:
             print(f"{self.name} is already enrolled.")
 
+    # To Access the private id
+    def get_id(self):
+        return self.__student_id
+
+    def drop_student(self):
+        if self.__is_enrolled == True:
+            self.__is_enrolled = False
+            
+            # modify the is_enrolled to false for student
+        else:
+            print(f"{self.name} is already dropped out.")
+
+
     def __repr__(self):
         return f'ID: {self.__student_id}, Name: {self.name}, Dept: {self.__department}, Enrolled: {self.__is_enrolled}'
     
@@ -26,6 +39,13 @@ class StudentDatabase:
         Student(103, 'Sikder', 'CSE', True)
     ]
 
+    def get_student_by_ID(self, id):
+        for student in self.student_list:
+            if id == student.get_id():
+                return student
+            
+        return None
+
 
     
 
@@ -33,10 +53,13 @@ class StudentDatabase:
 
 
 famousSchool = StudentDatabase()
-s1 = Student(104, 'Alan', 'EEE', False)
-s1.enroll_student(s1)
+student = famousSchool.get_student_by_ID(103)
+if student:
+    student.drop_student()
 
 
-# # output
+
+
+# output
 for student in famousSchool.student_list:
     print(student)
