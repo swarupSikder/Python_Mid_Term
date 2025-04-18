@@ -1,15 +1,53 @@
+#   -   -   -   -   -   #
+#                       #
+#       Student DB      #
+#                       #
+#   -   -   -   -   -   #
+class StudentDatabase:
+    student_list = []
+
+    @classmethod
+    def add_student(cls, student):
+        cls.student_list.append(student)
+
+    def get_student_by_ID(self, id):
+        for student in self.student_list:
+            if id == student.get_id():
+                return student
+        return None
+    
+    
+    def view_all_students(self):
+        print('\n---------------------------')
+        print('|       Student List      |')
+        print('---------------------------\n')
+        print('ID\tName\tDept\tEnroll_Status')
+
+        if not self.student_list:
+            print("-\t-\t-\t-")
+        else:
+            for student in self.student_list:
+                student.view_student_info()
+
+
+
+
+
+
+
+
+
+#   -   -   -   -   -   #
+#                       #
+#        Student        #
+#                       #
+#   -   -   -   -   -   #
 class Student:
     def __init__(self, student_id, name, department, is_enrolled):
         self.__student_id = student_id
         self.__name = name
         self.__department = department
         self.__is_enrolled = is_enrolled
-
-    @classmethod
-    def add_student(cls, name, roll, result):
-        student = Student(name, roll, result)
-        cls.student_list.append(student)
-
 
     # To Access the private id
     def get_id(self):
@@ -25,103 +63,130 @@ class Student:
     
     # To Access the private enrolled
     def get_enrolled(self):
-        status = "Enrolled" if self.__is_enrolled else "Not Enrolled"
-        return status
+        if self.__is_enrolled:
+            return True
+        else:
+            return False
 
     def enroll_student(self):
-        if not self.__is_enrolled:
+        if self.__is_enrolled:
+            print(f"[x] {self.get_name()} is already enrolled.")
+        else:
             self.__is_enrolled = True
             print(f"{self.get_name()} has been successfully enrolled.")
-        else:
-            print(f"{self.get_name()} is already enrolled.")
 
     def drop_student(self):
         if self.__is_enrolled:
             self.__is_enrolled = False
             print(f"{self.get_name()} has been dropped.")
         else:
-            print(f"{self.get_name()} is not currently enrolled.")
+            print(f"[x] {self.get_name()} is not currently enrolled.")
 
     def view_student_info(self):
-        print(f'ID: {self.get_id()}, Name: {self.get_name()}, Dept: {self.get_dept()}, Enrolled: {self.get_enrolled()}')
+        print(f'{self.get_id()}\t{self.get_name()}\t{self.get_dept()}\t{self.get_enrolled()}')
 
-    def __repr__(self):
-        return f'ID: {self.get_id()}, Name: {self.get_name()}, Dept: {self.get_dept()}, Enrolled: {self.get_enrolled()}'
-
-class StudentDatabase:
-    student_list = []
-
-    @classmethod
-    def add_student(cls, student):
-        cls.student_list.append(student)
-
-    def get_student_by_ID(self, id):
-        for student in self.student_list:
-            if id == student.get_id():
-                return student
-            
-        return None
-    
-    
-    def view_all_students(self):
-        if not self.student_list:
-            print("No students found")
-        else:
-            for student in self.student_list:
-                print(student)
 
 
     
 
-#---Manually added students---
+
+
+
+#   -   -   -   -   -   #
+#        Manually       #
+#         Added         #
+#        Students       #
+#   -   -   -   -   -   #
 StudentDatabase.add_student(Student(100, "Alif", "IPE", True))
 StudentDatabase.add_student(Student(101, "kopa", "CSE", False))
 StudentDatabase.add_student(Student(102, "samsu", "IPE", True))
 StudentDatabase.add_student(Student(103, "sikder", "IPE", True))
 
+menuText = """
+---------------------------------
+|    Student Management Menu    |
+---------------------------------
+1. View All Students
+2. Enroll Student
+3. Drop Student
+4. Exit
 
+"""
+
+
+
+
+
+
+
+
+
+
+
+
+#   -   -   -   -   -   #
+#          Main         #
+#         [Menu]        #
+#          Task         #
+#   -   -   -   -   -   #
 famousSchool = StudentDatabase()
 while True:
-    print('\n----Student Management Menu----')
-    print('1. View All Students')
-    print('2. Enroll Student')
-    print('3. Drop Student')
-    print('4. Exit')
-
+    print(menuText)
     opt = input("Enter your option (1-4): ")
+
+
+    #   -   -   -   -   -   #
+    #   View All Students   #
+    #   -   -   -   -   -   #
     if opt == '1':
         famousSchool.view_all_students()
+
+    #   -   -   -   -   -   #
+    #    Enroll Students    #
+    #   -   -   -   -   -   #
     elif opt == '2':
-        st_id = int(input('Enter a valid Student ID: '))
-        if not (100 <= st_id < 201):
-            print('Invalid student ID')
-            continue
+        print('\n---------------------------')
+        print('|      Enroll Student     |')
+        print('---------------------------\n')
+        try:
+            st_id = input('Enter Student ID: ')
+            student = famousSchool.get_student_by_ID(int(st_id))
+            if student:
+                if student.get_enrolled():
+                    print(f'[x] {student.get_name()} is already enrolled.')
+                else:
+                    student.enroll_student()
+            else:
+                print(f'[x] Student with ID-[{st_id}] is not found!')
 
-        if famousSchool.get_student_by_ID(st_id):
-            print("A student with this ID already exists.")
-            continue
+        except ValueError:
+            print('[x] Invalid Input! Please try again...')
 
 
-        st_name = input('Enter Student Name: ')
-        st_dept = input('Enter department: ')
-        newStudent = Student(st_id, st_name, st_dept, True)
-
-        if newStudent.get_id() > 99 and newStudent.get_id() < 201:
-            newStudent.enroll_student()
-            # famousSchool.view_all_students()
-        else:
-            print('Invalid student ID')
+    #   -   -   -   -   -   #
+    #      Drop Student     #
+    #   -   -   -   -   -   #
     elif opt == '3':
-        st_id = int(input('Enter a valid Student ID: '))
+        print('\n---------------------------')
+        print('|      Drop A Student     |')
+        print('---------------------------\n')
+        try:
+            st_id = input('Enter Student ID: ')
+            student = famousSchool.get_student_by_ID(int(st_id))
+            if student:
+                student.drop_student()
+            else:
+                print(f'[x] Student with ID-[{st_id}] is not found!')
 
-        student = famousSchool.get_student_by_ID(st_id)
-        if student and 99 < student.get_id() < 201:
-            student.drop_student()
-            # famousSchool.view_all_students()
-        else:
-            print('Invalid student ID')
+        except ValueError:
+            print('[x] Invalid Input! Please try again...')
+
+
+    #   -   -   -   -   -   #
+    #          Exit         #
+    #   -   -   -   -   -   #
     elif opt == '4':
         print('Exit Done...')
         break
     else:
-        print('Invalid option. Try again!')
+        print('[x] Invalid option. Try again!')
